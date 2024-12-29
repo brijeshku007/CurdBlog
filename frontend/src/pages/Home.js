@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchPosts } from "../api";
 import { Link, Navigate } from "react-router-dom";
-
+import Logout from "./Logout";
 const Home = () => {
   const [posts, setPosts] = useState([]);
 
@@ -22,6 +22,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Posts</h1>
+        <Logout></Logout>
         <div className="text-right mb-6">
           <Link
             to="/create"
