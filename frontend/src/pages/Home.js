@@ -1,28 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { fetchPosts } from "../api";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Logout from "./Logout";
+
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const navigate = useNavigate(); // Hook for programmatic navigation
 
   useEffect(() => {
+    const token = localStorage.getItem("token"); // Check for the token in localStorage
+
+    if (!token) {
+      // If token is missing, redirect to the login page
+      setIsAuthenticated(false);
+      return;
+    }
+
     const getPosts = async () => {
-      try{
-      const { data } = await fetchPosts();
-      setPosts(data);
-      }catch{
-        alert("same problem please login again");
-        Navigate("/login")
+      try {
+        const { data } = await fetchPosts(); // Fetch posts if token is valid
+        setPosts(data);
+      } catch (error) {
+        alert("Session expired. Please log in again.");
+        localStorage.removeItem("token"); // Clear invalid token
+        setIsAuthenticated(false);
+        navigate("/login"); // Redirect to login page
       }
     };
+
     getPosts();
-  }, []);
+  }, [navigate]);
+
+  // If not authenticated, redirect to the login page
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Posts</h1>
-        <Logout></Logout>
+        <Logout />
         <div className="text-right mb-6">
           <Link
             to="/create"

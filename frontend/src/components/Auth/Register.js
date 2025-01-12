@@ -12,10 +12,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if(!formData.username || ! formData.email ||formData.password){
-    //   alert('Please fill in all fields');
-      
-    // }
     try{
     await register(formData);
     navigate('/login');
